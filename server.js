@@ -1,17 +1,20 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const authRoutes = require('./routes/auth');
+const walletRoutes = require('./routes/wallet');
+
 const app = express();
-
-const PORT = process.env.PORT || 3000;
-
-// Middleware to parse JSON
+app.use(cors());
 app.use(express.json());
 
-// Default route
-app.get('/', (req, res) => {
-    res.send('Kunal');
+mongoose.connect('mongodb://localhost:27017/wallet', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.use('/api/auth', authRoutes);
+app.use('/api/wallet', walletRoutes);
+
+app.listen(5000, () => console.log('Server started on port 5000'));
